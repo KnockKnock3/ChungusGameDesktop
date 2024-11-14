@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "big.h"
+#include "hit.h"
+#include "laser.h"
+
 #define WINDOW_WIDTH 1000
 #define WINDOW_HEIGHT 1000
 #define NUM_OF_DEATH_MESSAGES 6
@@ -89,9 +93,30 @@ int main() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Chungus Game - Wave 1");
     InitAudioDevice();
 
-    Texture2D chungus_texture = LoadTexture("res/big.png");
-    Sound hit_sound = LoadSound("res/eep.wav");
-    Sound laser_sound = LoadSound("res/laser.wav");
+    Image chungus_image = {0};
+    chungus_image.format = BIG_FORMAT;
+    chungus_image.height = BIG_HEIGHT;
+    chungus_image.width = BIG_WIDTH;
+    chungus_image.data = BIG_DATA;
+    chungus_image.mipmaps = 1;
+    Texture2D chungus_texture = LoadTextureFromImage(chungus_image);
+
+    Wave hit_wave = {0};
+    hit_wave.channels = HIT_CHANNELS;
+    hit_wave.data = HIT_DATA;
+    hit_wave.frameCount = HIT_FRAME_COUNT;
+    hit_wave.sampleRate = HIT_SAMPLE_RATE;
+    hit_wave.sampleSize = HIT_SAMPLE_SIZE;
+    Sound hit_sound = LoadSoundFromWave(hit_wave);
+
+    Wave laser_wave = {0};
+    laser_wave.channels = LASER_CHANNELS;
+    laser_wave.data = LASER_DATA;
+    laser_wave.frameCount = LASER_FRAME_COUNT;
+    laser_wave.sampleRate = LASER_SAMPLE_RATE;
+    laser_wave.sampleSize = LASER_SAMPLE_SIZE;
+    Sound laser_sound = LoadSoundFromWave(laser_wave);
+
     Music soviet_anthem = LoadMusicStream("res/soviet-anthem.mp3");
 
     PlayMusicStream(soviet_anthem);
