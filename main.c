@@ -54,7 +54,7 @@ void spawn_chungi(int num) {
     free(chungi);
     chungi = malloc(chungi_length * sizeof(Chungus));
     for (int i=0; i<chungi_length; i++) {
-        chungi[i] = (Chungus) {WINDOW_WIDTH + i*CHUNGUS_SPEED*1/wave, GetRandomValue(0, WINDOW_HEIGHT - 150), ChungusSize.width, ChungusSize.height, true};
+        chungi[i] = (Chungus) {WINDOW_WIDTH + i*CHUNGUS_SPEED*1/(wave), GetRandomValue(0, WINDOW_HEIGHT - 150), ChungusSize.width, ChungusSize.height, true};
     }
 }
 
@@ -88,6 +88,10 @@ int get_turret_cost(void) {
     return 20 * (turrets_length + 1);
 }
 
+int get_chungus_for_wave(int wave) {
+    return 2 * wave*wave;
+}
+
 int main() {
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Chungus Game - Wave 1");
@@ -117,10 +121,6 @@ int main() {
     laser_wave.sampleSize = LASER_SAMPLE_SIZE;
     Sound laser_sound = LoadSoundFromWave(laser_wave);
 
-    Music soviet_anthem = LoadMusicStream("res/soviet-anthem.mp3");
-
-    PlayMusicStream(soviet_anthem);
-
     char *death_message = death_messages[GetRandomValue(0, NUM_OF_DEATH_MESSAGES-1)];
     char *quote = quotes[GetRandomValue(0, NUM_OF_QUOTES-1)];
     chungi = malloc(0);
@@ -138,7 +138,6 @@ int main() {
     while (!WindowShouldClose()) {
 
         float deltaTime = GetFrameTime();
-        UpdateMusicStream(soviet_anthem);
 
         if (IsKeyPressed(KEY_F3)) {
             display_fps = !display_fps;
@@ -202,7 +201,7 @@ int main() {
             }
             if (passed) {
                 wave++;
-                spawn_chungi(5*wave);
+                spawn_chungi(get_chungus_for_wave(wave));
                 char *new_window_title = TextFormat("Chungus Game - Wave %d", wave);
                 SetWindowTitle(new_window_title);
             }
@@ -247,7 +246,6 @@ int main() {
 
     }
 
-    UnloadMusicStream(soviet_anthem);
     CloseAudioDevice();
     CloseWindow();
 
